@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 export default function CharacterCard(props) {
   const { id, name, status, gender, image } = props;
 
+  console.log(image)
+
 
   return (
     <Link to={`/character/${id}`}>

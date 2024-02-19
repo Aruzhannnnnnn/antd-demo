@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Input, Pagination } from "antd";
+import { Flex, Input, } from "antd";
 import CharacterCard from '../assets/CharacterCard';
 import { useDebounce } from '../useDebounce';
+import Pagination from '../components/Pagination';
 
 export function MainPage() {
   const [characters, setCharacters] = useState({ results: [] });
@@ -35,7 +36,8 @@ export function MainPage() {
           </div>
         ))}
       </Flex>
-      <Pagination size="large" total={characters?.info?.count} onChange={onChange} current={currentPage} />
+      {/* <Pagination size="large" total={characters?.info?.count} onChange={onChange} current={currentPage} /> */}
+      <Pagination total={characters?.info?.count} onChange={onChange}/>
     </div>
   )
 }
