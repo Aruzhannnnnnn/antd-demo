@@ -16,6 +16,7 @@ const Pagination = ({ perPage = 20, total, onChange }) => {
                    key={number}
                    onClick={() => onChange(number)}
                    className="page-number"
+                   
                 >
                    {number}
                 </button>
