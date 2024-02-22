@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Flex, Input, } from "antd";
 import CharacterCard from '../assets/CharacterCard';
 import { useDebounce } from '../useDebounce';
-import Pagination from '../components/Pagination';
+import Pagination from '../components/UI/Pagination/Pagination';
 
 export function MainPage() {
   const [characters, setCharacters] = useState({ results: [] });
   const [currentPage, setCurrentPage] = useState(1);
   const [name, setName] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
   const search = useDebounce(name)
 
 
@@ -22,7 +23,14 @@ export function MainPage() {
       setCharacters(res);
     }
 
-    fetchCharacter()
+try {
+  setIsLoading(false)
+  fetchCharacter()
+} catch (error) {
+  console.log(error)
+}finally{
+  setIsLoading(true)
+}
 
   }, [currentPage, search])
 
@@ -37,7 +45,7 @@ export function MainPage() {
         ))}
       </Flex>
       {/* <Pagination size="large" total={characters?.info?.count} onChange={onChange} current={currentPage} /> */}
-      <Pagination total={characters?.info?.count} onChange={onChange}/>
+      <Pagination total={characters?.info?.count} isLoading={isLoading} onChange={onChange}/>
     </div>
   )
 }

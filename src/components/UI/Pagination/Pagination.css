@@ -1,0 +1,7 @@
+.pagination{
+
+}
+
+.pagination-disabled{
+    pointer-events:none;
+}
