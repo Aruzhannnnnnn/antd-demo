@@ -22,6 +22,8 @@ const [character,setCharacter]= useState(null)
         
     }, [id])
  
+
+    
     return (
     <div>
         <p>{character?.name}</p>

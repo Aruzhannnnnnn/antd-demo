@@ -3,8 +3,14 @@ import { Flex, Input, } from "antd";
 import CharacterCard from '../assets/CharacterCard';
 import { useDebounce } from '../useDebounce';
 import Pagination from '../components/UI/Pagination/Pagination';
+import { useDispatch, useSelector, } from 'react-redux';
+import {fetchCharacter} from '../store/slices/characterSlice'
 
 export function MainPage() {
+  const dispatch = useDispatch()
+  const {data} = useSelector(((state) => state.character))
+
+
   const [characters, setCharacters] = useState({ results: [] });
   const [currentPage, setCurrentPage] = useState(1);
   const [name, setName] = useState('')
@@ -16,23 +22,28 @@ export function MainPage() {
     setCurrentPage(page)
   }
 
-  useEffect(() => {
-    const fetchCharacter = async () => {
-      const json = await fetch(`https://rickandmortyapi.com/api/character?page=${currentPage}&name=${search}`)
-      const res = await json.json()
-      setCharacters(res);
-    }
+  // useEffect(() => {
+  //   const fetchCharacter = async () => {
+  //     const json = await fetch(`https://rickandmortyapi.com/api/character?page=${currentPage}&name=${search}`)
+  //     const res = await json.json()
+  //     setCharacters(res);
+  //   }
 
-try {
-  setIsLoading(false)
-  fetchCharacter()
-} catch (error) {
-  console.log(error)
-}finally{
-  setIsLoading(true)
-}
+// try {
+//   setIsLoading(false)
+//   fetchCharacter()
+// } catch (error) {
+//   console.log(error)
+// }finally{
+//   setIsLoading(true)
+// }
 
-  }, [currentPage, search])
+//   }, [currentPage, search])
+
+useEffect(()=>{
+  dispatch(fetchCharacter({currentPage,search}))
+  console.log(character)
+},[])
 
   return (
     <div>
