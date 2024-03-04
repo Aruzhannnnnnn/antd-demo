@@ -23,7 +23,7 @@ export const characterSlice = createSlice({
   reducers: {
     setSearchText: (state, action) => {
         state.searchText = action.payload
-      },
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -39,7 +39,7 @@ export const characterSlice = createSlice({
       .addCase(fetchCharacter.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = false;
-        state.data = action.payload;
+        state.data = [...state.data, ...action.payload];
       });
   },
 })

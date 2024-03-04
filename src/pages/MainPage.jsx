@@ -1,69 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Input, } from "antd";
+import { Flex, Input } from "antd";
 import CharacterCard from '../assets/CharacterCard';
 import { useDebounce } from '../hooks/useDebounce';
 import Pagination from '../components/UI/Pagination/Pagination';
-import { useDispatch, useSelector, } from 'react-redux';
-import {fetchCharacter, setSearchText} from '../store/slices/characterSlice'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCharacter, setSearchText } from '../store/slices/characterSlice';
 
 export function MainPage() {
-  const dispatch = useDispatch()
-  
-  const {data,searchText } = useSelector(((state) => state.character))
-
-
-  const [characters, setCharacters] = useState({ results: [] });
+  const dispatch = useDispatch();
+  const { data, searchText } = useSelector((state) => state.character);
   const [currentPage, setCurrentPage] = useState(1);
-  const [name, setName] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
- 
-  // const search = useDebounce(name)
+  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState('');
 
-
-  const onChange = (page) => {
-    setCurrentPage(page)
-  }
   const inputHandler = (event) => {
-    dispatch(setSearchText(event.target.value))
-  }
+    dispatch(setSearchText(event.target.value));
+  };
 
-  // useEffect(() => {
-  //   const fetchCharacter = async () => {
-  //     const json = await fetch(`https://rickandmortyapi.com/api/character?page=${currentPage}&name=${search}`)
-  //     const res = await json.json()
-  //     setCharacters(res);
-  //   }
+  useEffect(() => {
+    dispatch(fetchCharacter({ currentPage, search: searchText }));
+  }, [currentPage, searchText]); 
 
-// try {
-//   setIsLoading(false)
-//   fetchCharacter()
-// } catch (error) {
-//   console.log(error)
-// }finally{
-//   setIsLoading(true)
-// }
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
-//   }, [currentPage, search])
+  const handleScroll = () => {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-useEffect(()=>{
-  dispatch(fetchCharacter({currentPage,search: searchText}))
-  console.log(data)
-},[dispatch, searchText])
+    if (windowHeight + scrollTop >= documentHeight - 100) {
+      loadMore(); 
+    }
+  };
+
+  const loadMore = () => {
+    if (!isLoading) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
 
   return (
     <div>
       <Flex align='center' wrap='wrap' gap='small'>
-      <Input placeholder="Basic usage" onChange={inputHandler}/>;
+        <Input placeholder="Basic usage" onChange={inputHandler} />
         {data.map(character => (
           <div key={character.id}>
-            <CharacterCard id={character.id} name={character.name} status={character.status} gender={character.gender} image={character.image} onClick/>
+            <CharacterCard id={character.id} name={character.name} status={character.status} gender={character.gender} image={character.image} onClick />
           </div>
         ))}
       </Flex>
-      {/* <Pagination size="large" total={characters?.info?.count} onChange={onChange} current={currentPage} /> */}
-      <Pagination total={data?.info?.count} isLoading={isLoading} onChange={onChange}/>
+      <Pagination total={data?.info?.count} isLoading={isLoading} currentPage={currentPage} onChange={setCurrentPage} />
     </div>
-  )
+  );
 }
 
 export default MainPage;
